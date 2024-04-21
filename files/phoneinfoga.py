@@ -90,7 +90,15 @@ except:
     sys.exit()
 
 requests.packages.urllib3.disable_warnings()
-requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += 'HIGH:!DH:!aNULL'
+import ssl
+import requests
+
+# Define the ciphers
+ciphers = ssl.create_default_context().get_ciphers()
+ciphers += ':HIGH:!DH:!aNULL'
+
+# Set the ciphers for requests
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = ':'.join(ciphers)
 try:
     requests.packages.urllib3.contrib.pyopenssl.DEFAULT_SSL_CIPHER_LIST += 'HIGH:!DH:!aNULL'
 except AttributeError:
